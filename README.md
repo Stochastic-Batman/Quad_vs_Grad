@@ -120,8 +120,6 @@ Follow these steps to get up and running quickly:
    - `--lr` : Learning rate for first-order methods (default depends on optimizer)
    - `--steps` : Maximum number of optimization steps (default: 500-1000)
    - `--tol` : Convergence tolerance (default: 1e-6)
-   - `--first_order` : Choose `sgd` or `adam` (default: `sgd`)
-   - `--second_order` : Choose `newton`, `bfgs`, `lbfgs`, `ggn` or `kfac` (default: `lbfgs`)
    - `--damping` : Damping factor for Newton-like methods
 
 6. **View the results**  

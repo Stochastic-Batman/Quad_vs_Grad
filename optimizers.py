@@ -6,7 +6,7 @@ import torch.nn as nn
 from pathlib import Path
 from scipy.optimize import minimize
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s- %(name)s  (%(levelname)s): %(message)s', datefmt='%d/%m/%Y %H:%M:%S')
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s  (%(levelname)s): %(message)s', datefmt='%d/%m/%Y %H:%M:%S')
 logger = logging.getLogger(Path(__file__).stem + "Logger")
 
 _EPS = 1e-7

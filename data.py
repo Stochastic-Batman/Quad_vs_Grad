@@ -5,7 +5,7 @@ import torch
 from pathlib import Path
 
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s- %(name)s  (%(levelname)s): %(message)s', datefmt='%d/%m/%Y %H:%M:%S')
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s  (%(levelname)s): %(message)s', datefmt='%d/%m/%Y %H:%M:%S')
 logger = logging.getLogger(Path(__file__).stem + "Logger")
 
 
