@@ -1,21 +1,9 @@
 # Quad_vs_Grad
 First-Order vs Second-Order Optimization Methods for Deep Learning
 
-This repository demonstrates and visualizes the differences between first-order (e.g., Gradient Descent) and second-order (e.g., Newton's method) optimization techniques. It uses PyTorch, NumPy, SciPy, and Matplotlib to compare their paths on a non-convex loss landscape. I optimize the [Himmelblau function](https://en.wikipedia.org/wiki/Himmelblau%27s_function) - a classic test function with multiple local minima that mimics the complex, "mountainous" loss surfaces found in neural networks. This makes it ideal for illustrating how second-order methods can navigate curvature better than first-order ones, often converging faster or avoiding poor paths.
+This repository demonstrates and visualizes the differences between first-order (e.g., SGD, Adam) and second-order (e.g., Newton's method, BFGS, L-BFGS) optimization techniques in a deep learning context. It uses PyTorch, NumPy, SciPy, and Matplotlib to compare their optimization paths on a non-convex loss landscape.
 
-The content and insights here are inspired by the University of Tübingen's "Numerics of Machine Learning" lecture slides (2022/23), available at the [Numerics of ML repo](https://github.com/philipphennig/NumericsOfML/tree/main), specifically the second-order optimization slide: [12_SecondOrderOptimization.pdf](https://github.com/philipphennig/NumericsOfML/blob/main/slides/12_SecondOrderOptimization.pdf). **Grok 4.1 Fast** was used for grammar correction of this `README.md`.
-
-Citation for the lecture notes:
-```
-@techreport{NoML22,
-     title = {Numerics of Machine Learning},
-     author = {N. Bosch and J. Grosse and P. Hennig and A. Kristiadi and
-               M. Pförtner and J. Schmidt and F. Schneider and L. Tatzel and J. Wenger},
-     series = {Lecture Notes in Machine Learning},
-     year = {2022},
-     institution = {Tübingen AI Center},
-}
-```
+The content and insights here are inspired by the University of Tübingen's "Numerics of Machine Learning" lecture slides (2022/23), available at the [Numerics of ML repo](https://github.com/philipphennig/NumericsOfML.git), specifically the second-order optimization slide: [12_SecondOrderOptimization.pdf](https://github.com/philipphennig/NumericsOfML/blob/main/slides/12_SecondOrderOptimization.pdf). **Grok 4.1 Fast** was used for grammar correction of this `README.md`.
 
 ## Advantages of Second-Order Methods
 Second-order optimization methods, like Newton's method, offer several appealing benefits, particularly when compared to first-order (gradient-based) approaches:
@@ -56,17 +44,28 @@ These approaches are pragmatic, with pros (e.g., efficiency) and cons (e.g., app
 - Fundamentally unsolved.
 
 ## Project Overview
-The "deep learning task" here is a simplified proxy: minimizing the Himmelblau function, defined as **f(x, y) = (x^2 + y - 11)^2 + (x + y^2 - 7)^2**. This 2D function has four local minima, creating a visually engaging landscape that represents the non-convex challenges in training neural networks (e.g., avoiding saddles or suboptimal minima). The project runs Gradient Descent (first-order) and Newton's method (second-order), records their optimization paths, and visualizes them on contour plots - both as static images and animated GIFs. This highlights how second-order methods use curvature information for more efficient "jumps," while first-order methods take smaller, gradient-directed steps.
+The deep learning task here is **binary classification on a 2D XOR-like grid** using a small multi-layer perceptron (MLP).  
 
-- **Dependencies**: Matplotlib (plots and animations), NumPy (arrays), SciPy (optimization helpers), Pillow (for saving GIFs), PyTorch (for autograd and Hessians).
+We generate a synthetic dataset of points distributed on a 2D grid in [-1, 1] × [-1, 1], where each point is labeled according to the classic XOR pattern (e.g., positive label if **(sign(x) XOR sign(y))** is true, or quadrant-based XOR logic). This creates a highly non-linear, non-convex classification problem - the famous task that single-layer perceptrons cannot solve.
+
+A tiny MLP (e.g., 2 input -> small hidden layer -> 1 output, with only a few trainable parameters) is used so that the parameter space remains low-dimensional (typically visualized in 2D by fixing most weights and varying two). The model is trained to minimize binary cross-entropy loss, and we record the paths taken by different optimizers through the loss landscape.
+
+The project compares:
+- **First-order methods**: SGD and Adam
+- **Second-order / quasi-second-order methods**: Newton's method, BFGS, L-BFGS, and approximations like GGN/FIM/K-FAC (adapted for this small setting)
+
+Optimization paths are visualized on contour plots of the loss surface - both as static images and animated GIFs - clearly showing how second-order methods exploit curvature for faster or more direct convergence, while first-order methods follow gradient directions more cautiously.
+
+- **Dependencies**: Matplotlib (plots and animations), NumPy (arrays), SciPy (optimization helpers), Pillow (for saving GIFs), PyTorch (for autograd, models, and optimizers).
 - **Outputs**: `paths.png` (static overlay of paths) and `journey.gif` (animated paths).
 
 ## Project Structure
 ```
 Quad_vs_Grad/
 ├── main.py             # Entry point: Runs optimizations and generates visuals
-├── optimizers.py       # Implements Gradient Descent and Newton's method
+├── optimizers.py       # Implements first- and second-order optimizers
 ├── visualize.py        # Functions for static plots and animations
+├── data.py             # Dataset generation for XOR-like grid
 ├── requirements.txt    # Dependencies: matplotlib, numpy, pillow, scipy, torch
 └── README.md           
 ```
@@ -74,10 +73,60 @@ Quad_vs_Grad/
 After running, you'll also see generated files like `paths.png` and `journey.gif` in the root.
 
 ## How to Run
-1. Clone the repo: `git clone https://github.com/yourusername/Quad_vs_Grad.git`
-2. Navigate to the directory: `cd Quad_vs_Grad`
-3. Create and activate a virtual environment: `python -m venv qvg_env` then `source qvg_env/bin/activate` (Linux/macOS) or `qvg_env\Scripts\activate` (Windows)
-4. Install dependencies: `pip install -r requirements.txt`
-5. Run the main script: `python main.py`
-   - Customize via command-line arguments: Provide the initial point (e.g., `python main.py --x0 2.7 --y0 -3.14` to start at **[2.7, -3.14]**; defaults to **[0.0, 0.0]**) and major parameters for optimizers, such as `--lr 0.001` (learning rate for Gradient Descent), `--steps 1000` (max steps for both), `--tol 1e-6` (tolerance for convergence), and others like damping for Newton's method if implemented.
-6. View outputs: Open `paths.png` for the static plot or `journey.gif` for the animation.
+
+Follow these steps to get up and running quickly:
+
+1. **Clone the repository**  
+   ```bash
+   git clone https://github.com/yourusername/Quad_vs_Grad.git
+   ```
+
+2. **Navigate into the project folder**  
+   ```bash
+   cd Quad_vs_Grad
+   ```
+
+3. **Create and activate a virtual environment** (recommended)  
+   ```bash
+   python -m venv qvg_env
+   ```
+   - On Linux/macOS:  
+     ```bash
+     source qvg_env/bin/activate
+     ```
+   - On Windows:  
+     ```bash
+     qvg_env\Scripts\activate
+     ```
+
+4. **Install the required dependencies**  
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+5. **Run the main script**  
+   The simplest way:  
+   ```bash
+   python main.py
+   ```
+
+   Customize the run with command-line arguments:  
+   ```bash
+   python main.py --x0 0.5 --y0 -0.8 --lr 0.05 --steps 500 --tol 1e-5
+   ```
+
+   Available flags include:
+   - `--x0` / `--y0` : Starting point in parameter space (default: [0.0, 0.0])
+   - `--lr` : Learning rate for first-order methods (default depends on optimizer)
+   - `--steps` : Maximum number of optimization steps (default: 500-1000)
+   - `--tol` : Convergence tolerance (default: 1e-6)
+   - `--first_order` : Choose `sgd` or `adam` (default: `sgd`)
+   - `--second_order` : Choose `newton`, `bfgs`, `lbfgs`, `ggn`, `kfac`, etc. (default: `lbfgs`)
+   - `--damping` : Damping factor for Newton-like methods
+
+6. **View the results**  
+   After the script finishes, open these files in the project root:
+   - `paths.png`: static contour plot showing the full optimization paths overlaid on the loss surface
+   - `journey.gif`: animated version of the paths, showing step-by-step movement
+
+Have fun experimenting with different starting points, learning rates, and optimizer combinations - the differences between first- and second-order methods become very clear on this classic non-linear problem!
