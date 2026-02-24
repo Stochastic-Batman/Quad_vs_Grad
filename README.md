@@ -88,15 +88,15 @@ Follow these steps to get up and running quickly:
 
 3. **Create and activate a virtual environment** (recommended)  
    ```bash
-   python -m venv qvg_env
+   python -m venv qvg_venv
    ```
    - On Linux/macOS:  
      ```bash
-     source qvg_env/bin/activate
+     source qvg_venv/bin/activate
      ```
    - On Windows:  
      ```bash
-     qvg_env\Scripts\activate
+     .\qvg_venv\Scripts\activate
      ```
 
 4. **Install the required dependencies**  
@@ -116,12 +116,12 @@ Follow these steps to get up and running quickly:
    ```
 
    Available flags include:
-   - `--x0` / `--y0` : Starting point in parameter space (default: [0.0, 0.0])
+   - `--x0` / `--y0` : Starting point in parameter space (default: [2.0, -2.0])
    - `--lr` : Learning rate for first-order methods (default depends on optimizer)
    - `--steps` : Maximum number of optimization steps (default: 500-1000)
    - `--tol` : Convergence tolerance (default: 1e-6)
    - `--first_order` : Choose `sgd` or `adam` (default: `sgd`)
-   - `--second_order` : Choose `newton`, `bfgs`, `lbfgs`, `ggn`, `kfac`, etc. (default: `lbfgs`)
+   - `--second_order` : Choose `newton`, `bfgs`, `lbfgs`, `ggn` or `kfac` (default: `lbfgs`)
    - `--damping` : Damping factor for Newton-like methods
 
 6. **View the results**  

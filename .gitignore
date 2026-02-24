@@ -209,4 +209,6 @@ __marimo__/
 # Stochastic-Batman's additions
 .idea/
 *.xml
-qvg_env/
+qvg_venv/
+.venv/
+.lib/
