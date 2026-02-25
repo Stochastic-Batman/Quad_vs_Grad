@@ -78,7 +78,7 @@ Follow these steps to get up and running quickly:
 
 1. **Clone the repository**  
    ```bash
-   git clone https://github.com/yourusername/Quad_vs_Grad.git
+   git clone https://github.com/Stochastic-Batman/Quad_vs_Grad.git
    ```
 
 2. **Navigate into the project folder**  
